@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SendToSys</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: "Yu Gothic","メイリオ",sans-serif; padding: 20px; }
+    h2 { margin: 5px 0 10px 0;}
+    label {display: block; margin: 8px 0; cursor: pointer;}
+    button { margin-top: 15px; padding: 6px 12px; font-size: 14px; }
+    input[type="checkbox"] { transform: scale(1.5); margin-right: 8px; vertical-align: middle;}
+  </style>
+</head>
+<body>
+<h2>SendToSystem - 送信先設定</h2>
+<p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
+<label>
+  <input type="checkbox" id="iPad"> iPad
+</label>
+<label>
+  <input type="checkbox" id="Android"> Android
+</label>
+<label>
+  メモ:
+  <textarea id="memo" rows="5" style="width:100%; overflow:hidden; font-size:15px"></textarea>
+</label>
+<button onclick="save()">保存</button>
+<p id="json">{}</p>
+
+<script>
+  const json = {"send_to":{"iPad":true,"Android":false},"last_update":"2026/03/13 22:06:00","memo":"( ᐛ )wwwwwwwwwwww"};
+  const data = json;
+
+  // UIテスト用：初期状態を仮で設定
+  document.getElementById("iPad").checked = data.send_to.iPad;
+  document.getElementById("Android").checked = data.send_to.Android;
+  document.getElementById("last_update").textContent = "最終更新日時: "+data.last_update;
+  if (data.memo === "") {
+    document.getElementById("memo").value = "";
+    document.getElementById("memo").placeholder = "ここにメモを入力";
+  } else {
+    document.getElementById("memo").value = data.memo;
+  }
+  document.getElementById("json").textContent = JSON.stringify(data,null,1);
+
+  // 初期値を設定
+  document.getElementById("memo").value = data.memo || "";
+  adjustHeight(document.getElementById("memo"));
+
+  // テキスト変更時も自動調整
+  document.getElementById("memo").addEventListener(
+    "input", () => adjustHeight(document.getElementById("memo"))
+  );
+
+  // ほかの場所をタップしたら入力終了
+  document.addEventListener("click", (e) => {
+    const excludedTags = ["BUTTON", "INPUT", "LABEL"];
+    if (!document.getElementById("memo").contains(e.target)
+        && !excludedTags.includes(e.target.tagName)) {
+          document.getElementById("memo").blur();
+    }
+  });
+
+  // 高さ調整関数
+  function adjustHeight(el) {
+    el.style.height = "1px";       // いったんリセット
+    const minRows = 5;
+    const lineHeight = 20; // px, CSSで調整
+    el.style.height = Math.max(el.scrollHeight, minRows * lineHeight) + "px";
+  }
+
+  // 保存ボタン押したとき
+  function save() {
+    const iPad = document.getElementById("iPad").checked;
+    const Android = document.getElementById("Android").checked;
+    let message = "【保存完了】\n"
+    if (iPad&&Android) message += "iPad/Androidの両方に送信します。";
+    else if (iPad&&!Android) message += "iPadのみに送信します。";
+    else if (!iPad&&Android) message += "Androidのみに送信します。";
+    else if (!iPad&&!Android) message += "全情報の送信を停止します。";
+    else message = "不明なエラーです。やり直しください。";
+
+    let new_json = {
+      "send_to":{
+        "iPad":iPad,"Android":Android},
+      "last_update":getNowFormatted(new Date()),
+      "memo":document.getElementById("memo").value};
+    document.getElementById("json").textContent = JSON.stringify(new_json,null,1);
+    alert(message + "\n\nページを再読込します。");
+    location.reload();
+  }
+  function getNowFormatted(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0'); // 月は0始まり
+    const day = String(d.getDate()).padStart(2, '0');
+    const h = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    const s = String(d.getSeconds()).padStart(2, '0');
+    return `${y}/${m}/${day} ${h}:${min}:${s}`;
+  }
+</script>
+</body>
+</html>
