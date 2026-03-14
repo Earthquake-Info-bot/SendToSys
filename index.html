@@ -29,9 +29,15 @@
 <button onclick="save()">保存</button>
 <p id="json">{}</p>
 
-<script>
-  const json = {"send_to":{"iPad":true,"Android":false},"last_update":"2026/03/13 22:06:00","memo":"( ᐛ )wwwwwwwwwwww"};
-  const data = json;
+<script type="module">
+  const data = await loadData();
+
+  async function loadData() {
+    const res = await fetch('./data.json');  // data.json を読み込む
+    if (!res.ok) throw new Error('data.json が読めません'); 
+    const data = await res.json();           // JSON をオブジェクト化
+    return data;                             // 呼び出し元に返す
+  }
 
   // UIテスト用：初期状態を仮で設定
   document.getElementById("iPad").checked = data.send_to.iPad;
