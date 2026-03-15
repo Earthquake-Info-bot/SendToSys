@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SendToSys</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: "Yu Gothic","メイリオ",sans-serif; padding: 20px; }
     h2 { margin: 5px 0 10px 0;}
@@ -18,7 +17,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定(v5)</h2>
+<h2>SendToSystem - 送信先設定(v6)</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -32,7 +31,7 @@
 </label>
 <button>保存</button>
 <p id="json">{}</p>
-<p id="p_pw" style="color:blue; font-weight:bold; font-size:14px">Please enter your password:</p>
+<p id="p_pw" style="color:blue; font-weight:bold; font-size:14px">Please enter the password:</p>
 <textarea id="password" rows="1" style="width:100%; overflow:hidden; font-size:14px"></textarea>
 <div id="overlay">読込中…</div>
 
@@ -115,7 +114,6 @@
 
     const accessTokenUrl = `https://script.google.com/macros/s/AKfycbziY2BN073ZtG2M0GiYWVCU7DAD9Lv4fSqGkeVrjMGKntgIeKwxlct_${password}J10y/exec`;
     const accessToken = await loadAccessToken(accessTokenUrl);
-    console.log(" あくせすとーくんget")
     if (accessToken === "/ERROR/") {
       hideOverlay();
       alert("The password is incorrect, or the page does not exist.\nPlease try again.")
@@ -127,16 +125,18 @@
     }
   }
   async function loadAccessToken(url) {
-    console.log("fetch: "+url)
-    const res = await fetch(url);  // data.json を読み込む
-    console.log("fetch完了")
-    if (res.ok) {
-      const data = await res.json();           // JSON をオブジェクト化
-      const accessTokenEncoded = data.accessToken;
-      //const accessTokenDecoded = Utilities.newBlob(accessTokenEncoded).getDataAsString();
-      const accessTokenDecoded = atob(accessTokenEncoded);
-      return accessTokenDecoded;
-    } else {
+    try {
+      const res = await fetch(url);  // data.json を読み込む
+      if (res.ok) {
+        const data = await res.json();           // JSON をオブジェクト化
+        const accessTokenEncoded = data.accessToken;
+        //const accessTokenDecoded = Utilities.newBlob(accessTokenEncoded).getDataAsString();
+        const accessTokenDecoded = atob(accessTokenEncoded);
+        return accessTokenDecoded;
+      } else {
+        return "/ERROR/"
+      }
+    } catch(e) {
       return "/ERROR/";
     }
   }
