@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定(vT9.2)</h2>
+<h2>SendToSystem - 送信先設定(vT9.3)</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -195,6 +195,7 @@
         throw new Error("GitHub に push できませんでした\n" + (errData.message || JSON.stringify(errData)));
       }
       const result = await putRes.json();
+      alert(result);
       alert("更新完了\n" + result.content.html_url);
     } catch(e) {
       alert("ERROR\n"+e)
