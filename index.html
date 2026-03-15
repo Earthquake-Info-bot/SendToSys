@@ -18,7 +18,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定(v4)</h2>
+<h2>SendToSystem - 送信先設定(v5)</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -115,6 +115,7 @@
 
     const accessTokenUrl = `https://script.google.com/macros/s/AKfycbziY2BN073ZtG2M0GiYWVCU7DAD9Lv4fSqGkeVrjMGKntgIeKwxlct_${password}J10y/exec`;
     const accessToken = await loadAccessToken(accessTokenUrl);
+    console.log(" あくせすとーくんget")
     if (accessToken === "/ERROR/") {
       hideOverlay();
       alert("The password is incorrect, or the page does not exist.\nPlease try again.")
@@ -126,7 +127,9 @@
     }
   }
   async function loadAccessToken(url) {
+    console.log("fetch: "+url)
     const res = await fetch(url);  // data.json を読み込む
+    console.log("fetch完了")
     if (res.ok) {
       const data = await res.json();           // JSON をオブジェクト化
       const accessTokenEncoded = data.accessToken;
