@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定(vT9.3)</h2>
+<h2>SendToSystem - 送信先設定 - v1</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -74,7 +74,7 @@
   }
   
   async function loadData() {
-    const res = await fetch('https://earthquake-info-bot.github.io/SendToSys/data.json');  // data.json を読み込む
+    const res = await fetch(`./data.json?cb=${Date.now()}`);  // data.json を読み込む
     if (!res.ok) throw new Error('data.json が読めません'); 
     const data = await res.json();           // JSON をオブジェクト化
     return data;                             // 呼び出し元に返す
