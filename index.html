@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定(v8)</h2>
+<h2>SendToSystem - 送信先設定(v9)</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -183,7 +183,7 @@
         },
         body: JSON.stringify({
           message: "Update via web",
-          content: btoa(JSON.stringify(newJson, null, 1)), // base64化
+          content: utf8_to_b64(JSON.stringify(newJson, null, 1)), // 日本語対応
           branch: branch,
           sha: sha
         })
@@ -195,6 +195,9 @@
     } catch(e) {
       alert("ERROR\n"+e)
     }
+  }
+  function utf8_to_b64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
   }
 </script>
 </body>
