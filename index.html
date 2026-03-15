@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定(v6)</h2>
+<h2>SendToSystem - 送信先設定(v7)</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -120,6 +120,7 @@
       return;
     } else {
       hideOverlay();
+      await pushToGitHub(new_json, accessToken)
       alert(message + "\n\nページを再読込します。");
       location.reload();
     }
@@ -156,6 +157,40 @@
   // オーバーレイ非表示
   function hideOverlay() {
     document.getElementById("overlay").style.display = "none";
+  }
+  async function pushToGitHub(newJson, accessToken) {
+    const owner = 'earthquake-info-bot'; // リポジトリ所有者
+    const repo = 'SendToSys';             // リポ名
+    const path = 'data.json';             // 更新対象
+    const branch = 'main';                // ブランチ
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  
+    // まず最新の SHA を取得
+    const getRes = await fetch(apiUrl + `?ref=${branch}`, {
+      headers: { 'Authorization': `token ${accessToken}` }
+    });
+    if (!getRes.ok) throw new Error("GitHub API から SHA が取れません");
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+  
+    // PUT で更新
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: "Update via web",
+        content: btoa(JSON.stringify(newJson, null, 1)), // base64化
+        branch: branch,
+        sha: sha
+      })
+    });
+  
+    if (!putRes.ok) throw new Error("GitHub に push できませんでした");
+    const result = await putRes.json();
+    alert("更新完了\n" + result.content.html_url);
   }
 </script>
 </body>
