@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SendToSys</title>
+  <title>SendToSystem(v1)</title>
   <style>
     body { font-family: "Yu Gothic","メイリオ",sans-serif; padding: 20px; }
     h2 { margin: 5px 0 10px 0;}
@@ -17,7 +17,7 @@
   </style>
 </head>
 <body>
-<h2>SendToSystem - 送信先設定 - v1</h2>
+<h2>STS - 送信先設定</h2>
 <p id="last_update">最終更新日時: ----/--/-- --:--:--</p>
 <label>
   <input type="checkbox" id="iPad"> iPad
@@ -91,7 +91,7 @@
   // 保存ボタン押したとき
   async function save() {
     const password = document.getElementById("password").value;
-    const result = confirm("以下のパスワードで保存します。\n"+password);
+    const result = confirm("以下のパスワードを使用して設定を保存します。\n"+password);
     if(!result){
       return;
     }
@@ -188,15 +188,14 @@
           sha: sha
         })
       });
-      alert("accessToken:"+accessToken);
-      alert("sha:"+sha);
+      //alert("accessToken:"+accessToken);
+      //alert("sha:"+sha);
       if (!putRes.ok) {
         const errData = await putRes.json().catch(()=>({message:"JSON取得失敗"}));
         throw new Error("GitHub に push できませんでした\n" + (errData.message || JSON.stringify(errData)));
       }
       const result = await putRes.json();
-      alert(result);
-      alert("更新完了\n" + result.content.html_url);
+      //alert("更新完了\n" + result.content.html_url);
     } catch(e) {
       alert("ERROR\n"+e)
     }
