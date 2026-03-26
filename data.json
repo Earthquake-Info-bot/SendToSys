@@ -1,8 +1,8 @@
 {
  "send_to": {
-  "iPad": true,
+  "iPad": false,
   "Android": true
  },
- "last_update": "2026/03/26 07:41:13",
+ "last_update": "2026/03/26 10:10:49",
  "memo": ""
 }
